@@ -6,7 +6,7 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 04:08:47 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/07 12:46:09 by lsoulier         ###   ########.fr       */
+/*   Updated: 2020/12/08 14:41:02 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	test_ft_read(void)
 	int errno_real;
 	int errno_ft;
 
-
 	print_title("Tests for ft_read function");
 	printf("The BUFFER_SIZE is %d:\n", BUFFER_SIZE);
 	while (test_files[++i])
@@ -36,8 +35,8 @@ int	test_ft_read(void)
 		fd_ft = open(test_files[i], O_RDONLY);
 		ret_real = -1;
 		ret_ft = -1;
-		errno_real = -1;
-		errno_ft = -1;
+		errno_real = 0;
+		errno_ft = 0;
 		bzero(buf_real, BUFFER_SIZE + 1);
 		bzero(buf_ft, BUFFER_SIZE + 1);
 		if (strcmp(test_files[i], "notfound_file") != 0
@@ -61,11 +60,12 @@ int	test_ft_read(void)
 			}
 			else
 				buf_real[ret_real] = '\0';
+			errno = 0;	
 			ret_ft = ft_read(fd_ft, buf_ft, BUFFER_SIZE);
 			printf("ft_read returned %d\n", ret_ft);
 			printf("The cmp of functions returns is : ");
 			valid_test(ret_real == ret_ft);
-			if (ret_ft == -1)
+			if (ret_ft < 0)
 			{
 				errno_ft = errno;
 				printf("Errno for ft_read was set with %d\n", errno_ft);
@@ -73,7 +73,7 @@ int	test_ft_read(void)
 			}
 			else
 				buf_ft[ret_ft] = '\0';
-			if (ret_real == -1 || ret_ft == -1)
+			if (ret_real == -1)
 			{
 				printf("The cmp of errno values is :");
 				valid_test(errno_real == errno_ft);

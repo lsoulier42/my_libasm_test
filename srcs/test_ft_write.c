@@ -6,7 +6,7 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 04:08:21 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/07 12:55:15 by lsoulier         ###   ########.fr       */
+/*   Updated: 2020/12/08 14:38:27 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ void ft_write_unit(int fd, char *str)
 	int len_str;
 
 	len_str = strlen(str);
+	errno = 0 ;
+	errno_real = 0;
+	errno_ft = 0;
 	ft_putstr("This test use fd = ");
 	ft_putnbr(fd);
 	ft_putstr(" and the following str : |");
@@ -65,6 +68,7 @@ void ft_write_unit(int fd, char *str)
 		ft_putstr(strerror(errno_real));
 		ft_putstr(".\n");
 	}
+	errno = 0;
 	if (fd == 1)
 		ft_putstr("\nLet's call ft_write()\n");
 	ret_ft = ft_write(fd, str, len_str);
@@ -76,7 +80,7 @@ void ft_write_unit(int fd, char *str)
 	ft_putstr(".\n");
 	ft_putstr("The cmp of functions return is :");
 	valid_test(ret_ft == ret_real);
-	if (ret_ft == -1)
+	if (ret_ft < 0)
 	{
 		errno_ft = errno;
 		ft_putstr("Error\nft_write() set errno to ");
@@ -85,7 +89,7 @@ void ft_write_unit(int fd, char *str)
 		ft_putstr(strerror(errno_ft));
 		ft_putstr(".\n");
 	}
-	if (ret_ft == -1 && ret_real == -1)
+	if (ret_real == -1)
 	{
 		printf("The cmp of errno values is :");
 		valid_test(errno_ft == errno_real);
